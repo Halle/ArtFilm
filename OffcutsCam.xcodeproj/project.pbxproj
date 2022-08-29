@@ -1,0 +1,720 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8C3B7E5128A3E43200E7BAFB /* OffcutsCamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B7E5028A3E43200E7BAFB /* OffcutsCamApp.swift */; };
+		8C3B7E5328A3E43200E7BAFB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B7E5228A3E43200E7BAFB /* ContentView.swift */; };
+		8C3B7E5528A3E43300E7BAFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C3B7E5428A3E43300E7BAFB /* Assets.xcassets */; };
+		8C3B7E5828A3E43300E7BAFB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C3B7E5728A3E43300E7BAFB /* Preview Assets.xcassets */; };
+		8C3B7E6628A3E48200E7BAFB /* ExtensionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B7E6528A3E48200E7BAFB /* ExtensionProvider.swift */; };
+		8C3B7E6828A3E48200E7BAFB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B7E6728A3E48200E7BAFB /* main.swift */; };
+		8C3B7E6D28A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension in Embed System Extensions */ = {isa = PBXBuildFile; fileRef = 8C3B7E6328A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8C43F88328AE52F300C8EEDF /* ExtensionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3B7E6528A3E48200E7BAFB /* ExtensionProvider.swift */; };
+		8C43F88528AE556500C8EEDF /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C36AF28AD34F4001EBD31 /* Shared.swift */; };
+		8C6C36B028AD34F4001EBD31 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C36AF28AD34F4001EBD31 /* Shared.swift */; };
+		8C6C36B128AD34F4001EBD31 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C36AF28AD34F4001EBD31 /* Shared.swift */; };
+		8CE007CE28BA43B2001E6D27 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C728BA43B1001E6D27 /* 4.jpg */; };
+		8CE007CF28BA43B2001E6D27 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C728BA43B1001E6D27 /* 4.jpg */; };
+		8CE007D028BA43B2001E6D27 /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C828BA43B1001E6D27 /* 5.jpg */; };
+		8CE007D128BA43B2001E6D27 /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C828BA43B1001E6D27 /* 5.jpg */; };
+		8CE007D228BA43B2001E6D27 /* 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C928BA43B1001E6D27 /* 7.jpg */; };
+		8CE007D328BA43B2001E6D27 /* 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007C928BA43B1001E6D27 /* 7.jpg */; };
+		8CE007D428BA43B2001E6D27 /* 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CA28BA43B2001E6D27 /* 6.jpg */; };
+		8CE007D528BA43B2001E6D27 /* 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CA28BA43B2001E6D27 /* 6.jpg */; };
+		8CE007D628BA43B2001E6D27 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CB28BA43B2001E6D27 /* 1.jpg */; };
+		8CE007D728BA43B2001E6D27 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CB28BA43B2001E6D27 /* 1.jpg */; };
+		8CE007D828BA43B2001E6D27 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CC28BA43B2001E6D27 /* 2.jpg */; };
+		8CE007D928BA43B2001E6D27 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CC28BA43B2001E6D27 /* 2.jpg */; };
+		8CE007DA28BA43B2001E6D27 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CD28BA43B2001E6D27 /* 3.jpg */; };
+		8CE007DB28BA43B2001E6D27 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE007CD28BA43B2001E6D27 /* 3.jpg */; };
+		8CEED2F028AE519200DFDD3B /* OffcutsCamEndToEndApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEED2EF28AE519200DFDD3B /* OffcutsCamEndToEndApp.swift */; };
+		8CEED2F228AE519200DFDD3B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CEED2F128AE519200DFDD3B /* ContentView.swift */; };
+		8CEED2F428AE519300DFDD3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CEED2F328AE519300DFDD3B /* Assets.xcassets */; };
+		8CEED2F728AE519300DFDD3B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CEED2F628AE519300DFDD3B /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8C3B7E6B28A3E48200E7BAFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C3B7E4528A3E43200E7BAFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8C3B7E6228A3E48200E7BAFB;
+			remoteInfo = Extension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8C3B7E7128A3E48200E7BAFB /* Embed System Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(SYSTEM_EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				8C3B7E6D28A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension in Embed System Extensions */,
+			);
+			name = "Embed System Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8C3B7E4D28A3E43200E7BAFB /* OffcutsCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OffcutsCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C3B7E5028A3E43200E7BAFB /* OffcutsCamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffcutsCamApp.swift; sourceTree = "<group>"; };
+		8C3B7E5228A3E43200E7BAFB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8C3B7E5428A3E43300E7BAFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8C3B7E5728A3E43300E7BAFB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8C3B7E5928A3E43300E7BAFB /* OffcutsCam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OffcutsCam.entitlements; sourceTree = "<group>"; };
+		8C3B7E6328A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension */ = {isa = PBXFileReference; explicitFileType = "wrapper.system-extension"; includeInIndex = 0; path = com.politepix.OffcutsCam.Extension.systemextension; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C3B7E6528A3E48200E7BAFB /* ExtensionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionProvider.swift; sourceTree = "<group>"; };
+		8C3B7E6728A3E48200E7BAFB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		8C3B7E6928A3E48200E7BAFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C3B7E6A28A3E48200E7BAFB /* Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Extension.entitlements; sourceTree = "<group>"; };
+		8C6C36AF28AD34F4001EBD31 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Shared.swift; path = Extension/Shared.swift; sourceTree = "<group>"; };
+		8CE007C728BA43B1001E6D27 /* 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 4.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/4.jpg; sourceTree = "<group>"; };
+		8CE007C828BA43B1001E6D27 /* 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 5.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/5.jpg; sourceTree = "<group>"; };
+		8CE007C928BA43B1001E6D27 /* 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 7.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/7.jpg; sourceTree = "<group>"; };
+		8CE007CA28BA43B2001E6D27 /* 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 6.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/6.jpg; sourceTree = "<group>"; };
+		8CE007CB28BA43B2001E6D27 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 1.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/1.jpg; sourceTree = "<group>"; };
+		8CE007CC28BA43B2001E6D27 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 2.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/2.jpg; sourceTree = "<group>"; };
+		8CE007CD28BA43B2001E6D27 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 3.jpg; path = ../../../../../../../Ratatoskr/Users/me/Developer/BlogProjectWIPs/MakingItWeird/Extension/3.jpg; sourceTree = "<group>"; };
+		8CEED2ED28AE519200DFDD3B /* OffcutsCamEndToEnd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OffcutsCamEndToEnd.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CEED2EF28AE519200DFDD3B /* OffcutsCamEndToEndApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffcutsCamEndToEndApp.swift; sourceTree = "<group>"; };
+		8CEED2F128AE519200DFDD3B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8CEED2F328AE519300DFDD3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8CEED2F628AE519300DFDD3B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8CEED2F828AE519300DFDD3B /* OffcutsCamEndToEnd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OffcutsCamEndToEnd.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8C3B7E4A28A3E43200E7BAFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8C3B7E6028A3E48200E7BAFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEED2EA28AE519200DFDD3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8C3B7E4428A3E43200E7BAFB = {
+			isa = PBXGroup;
+			children = (
+				8C6C36AF28AD34F4001EBD31 /* Shared.swift */,
+				8C3B7E4F28A3E43200E7BAFB /* OffcutsCam */,
+				8C3B7E6428A3E48200E7BAFB /* Extension */,
+				8CEED2EE28AE519200DFDD3B /* OffcutsCamEndToEnd */,
+				8C3B7E4E28A3E43200E7BAFB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8C3B7E4E28A3E43200E7BAFB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C3B7E4D28A3E43200E7BAFB /* OffcutsCam.app */,
+				8C3B7E6328A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension */,
+				8CEED2ED28AE519200DFDD3B /* OffcutsCamEndToEnd.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C3B7E4F28A3E43200E7BAFB /* OffcutsCam */ = {
+			isa = PBXGroup;
+			children = (
+				8C3B7E5028A3E43200E7BAFB /* OffcutsCamApp.swift */,
+				8C3B7E5228A3E43200E7BAFB /* ContentView.swift */,
+				8C3B7E5428A3E43300E7BAFB /* Assets.xcassets */,
+				8C3B7E5928A3E43300E7BAFB /* OffcutsCam.entitlements */,
+				8C3B7E5628A3E43300E7BAFB /* Preview Content */,
+			);
+			path = OffcutsCam;
+			sourceTree = "<group>";
+		};
+		8C3B7E5628A3E43300E7BAFB /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8C3B7E5728A3E43300E7BAFB /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8C3B7E6428A3E48200E7BAFB /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				8CE007CB28BA43B2001E6D27 /* 1.jpg */,
+				8CE007CC28BA43B2001E6D27 /* 2.jpg */,
+				8CE007CD28BA43B2001E6D27 /* 3.jpg */,
+				8CE007C728BA43B1001E6D27 /* 4.jpg */,
+				8CE007C828BA43B1001E6D27 /* 5.jpg */,
+				8CE007CA28BA43B2001E6D27 /* 6.jpg */,
+				8CE007C928BA43B1001E6D27 /* 7.jpg */,
+				8C3B7E6528A3E48200E7BAFB /* ExtensionProvider.swift */,
+				8C3B7E6728A3E48200E7BAFB /* main.swift */,
+				8C3B7E6928A3E48200E7BAFB /* Info.plist */,
+				8C3B7E6A28A3E48200E7BAFB /* Extension.entitlements */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		8CEED2EE28AE519200DFDD3B /* OffcutsCamEndToEnd */ = {
+			isa = PBXGroup;
+			children = (
+				8CEED2EF28AE519200DFDD3B /* OffcutsCamEndToEndApp.swift */,
+				8CEED2F128AE519200DFDD3B /* ContentView.swift */,
+				8CEED2F328AE519300DFDD3B /* Assets.xcassets */,
+				8CEED2F828AE519300DFDD3B /* OffcutsCamEndToEnd.entitlements */,
+				8CEED2F528AE519300DFDD3B /* Preview Content */,
+			);
+			path = OffcutsCamEndToEnd;
+			sourceTree = "<group>";
+		};
+		8CEED2F528AE519300DFDD3B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8CEED2F628AE519300DFDD3B /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8C3B7E4C28A3E43200E7BAFB /* OffcutsCam */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8C3B7E5C28A3E43300E7BAFB /* Build configuration list for PBXNativeTarget "OffcutsCam" */;
+			buildPhases = (
+				8C3B7E4928A3E43200E7BAFB /* Sources */,
+				8C3B7E4A28A3E43200E7BAFB /* Frameworks */,
+				8C3B7E4B28A3E43200E7BAFB /* Resources */,
+				8C3B7E7128A3E48200E7BAFB /* Embed System Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8C3B7E6C28A3E48200E7BAFB /* PBXTargetDependency */,
+			);
+			name = OffcutsCam;
+			productName = OffcutsCam;
+			productReference = 8C3B7E4D28A3E43200E7BAFB /* OffcutsCam.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8C3B7E6228A3E48200E7BAFB /* Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8C3B7E6E28A3E48200E7BAFB /* Build configuration list for PBXNativeTarget "Extension" */;
+			buildPhases = (
+				8C3B7E5F28A3E48200E7BAFB /* Sources */,
+				8C3B7E6028A3E48200E7BAFB /* Frameworks */,
+				8C3B7E6128A3E48200E7BAFB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Extension;
+			productName = Extension;
+			productReference = 8C3B7E6328A3E48200E7BAFB /* com.politepix.OffcutsCam.Extension.systemextension */;
+			productType = "com.apple.product-type.system-extension";
+		};
+		8CEED2EC28AE519200DFDD3B /* OffcutsCamEndToEnd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CEED2FB28AE519300DFDD3B /* Build configuration list for PBXNativeTarget "OffcutsCamEndToEnd" */;
+			buildPhases = (
+				8CEED2E928AE519200DFDD3B /* Sources */,
+				8CEED2EA28AE519200DFDD3B /* Frameworks */,
+				8CEED2EB28AE519200DFDD3B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OffcutsCamEndToEnd;
+			productName = OffcutsCamEndToEnd;
+			productReference = 8CEED2ED28AE519200DFDD3B /* OffcutsCamEndToEnd.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8C3B7E4528A3E43200E7BAFB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					8C3B7E4C28A3E43200E7BAFB = {
+						CreatedOnToolsVersion = 14.0;
+					};
+					8C3B7E6228A3E48200E7BAFB = {
+						CreatedOnToolsVersion = 14.0;
+					};
+					8CEED2EC28AE519200DFDD3B = {
+						CreatedOnToolsVersion = 13.4;
+					};
+				};
+			};
+			buildConfigurationList = 8C3B7E4828A3E43200E7BAFB /* Build configuration list for PBXProject "OffcutsCam" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8C3B7E4428A3E43200E7BAFB;
+			productRefGroup = 8C3B7E4E28A3E43200E7BAFB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8C3B7E4C28A3E43200E7BAFB /* OffcutsCam */,
+				8C3B7E6228A3E48200E7BAFB /* Extension */,
+				8CEED2EC28AE519200DFDD3B /* OffcutsCamEndToEnd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8C3B7E4B28A3E43200E7BAFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C3B7E5828A3E43300E7BAFB /* Preview Assets.xcassets in Resources */,
+				8C3B7E5528A3E43300E7BAFB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8C3B7E6128A3E48200E7BAFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CE007DA28BA43B2001E6D27 /* 3.jpg in Resources */,
+				8CE007D428BA43B2001E6D27 /* 6.jpg in Resources */,
+				8CE007CE28BA43B2001E6D27 /* 4.jpg in Resources */,
+				8CE007D028BA43B2001E6D27 /* 5.jpg in Resources */,
+				8CE007D228BA43B2001E6D27 /* 7.jpg in Resources */,
+				8CE007D828BA43B2001E6D27 /* 2.jpg in Resources */,
+				8CE007D628BA43B2001E6D27 /* 1.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEED2EB28AE519200DFDD3B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CE007DB28BA43B2001E6D27 /* 3.jpg in Resources */,
+				8CEED2F728AE519300DFDD3B /* Preview Assets.xcassets in Resources */,
+				8CEED2F428AE519300DFDD3B /* Assets.xcassets in Resources */,
+				8CE007D928BA43B2001E6D27 /* 2.jpg in Resources */,
+				8CE007D528BA43B2001E6D27 /* 6.jpg in Resources */,
+				8CE007D328BA43B2001E6D27 /* 7.jpg in Resources */,
+				8CE007D128BA43B2001E6D27 /* 5.jpg in Resources */,
+				8CE007D728BA43B2001E6D27 /* 1.jpg in Resources */,
+				8CE007CF28BA43B2001E6D27 /* 4.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8C3B7E4928A3E43200E7BAFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C3B7E5328A3E43200E7BAFB /* ContentView.swift in Sources */,
+				8C6C36B028AD34F4001EBD31 /* Shared.swift in Sources */,
+				8C3B7E5128A3E43200E7BAFB /* OffcutsCamApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8C3B7E5F28A3E48200E7BAFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C3B7E6828A3E48200E7BAFB /* main.swift in Sources */,
+				8C6C36B128AD34F4001EBD31 /* Shared.swift in Sources */,
+				8C3B7E6628A3E48200E7BAFB /* ExtensionProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CEED2E928AE519200DFDD3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CEED2F228AE519200DFDD3B /* ContentView.swift in Sources */,
+				8C43F88528AE556500C8EEDF /* Shared.swift in Sources */,
+				8CEED2F028AE519200DFDD3B /* OffcutsCamEndToEndApp.swift in Sources */,
+				8C43F88328AE52F300C8EEDF /* ExtensionProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8C3B7E6C28A3E48200E7BAFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8C3B7E6228A3E48200E7BAFB /* Extension */;
+			targetProxy = 8C3B7E6B28A3E48200E7BAFB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8C3B7E5A28A3E43300E7BAFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8C3B7E5B28A3E43300E7BAFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		8C3B7E5D28A3E43300E7BAFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OffcutsCam/OffcutsCam.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OffcutsCam/Preview Content\"";
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCam;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8C3B7E5E28A3E43300E7BAFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OffcutsCam/OffcutsCam.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OffcutsCam/Preview Content\"";
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCam;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8C3B7E6F28A3E48200E7BAFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Extension/Extension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Extension;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Camera Extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCam.Extension;
+				PRODUCT_NAME = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8C3B7E7028A3E48200E7BAFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Extension/Extension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Extension;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Camera Extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCam.Extension;
+				PRODUCT_NAME = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8CEED2F928AE519300DFDD3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = OffcutsCamEndToEnd/OffcutsCamEndToEnd.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OffcutsCamEndToEnd/Preview Content\"";
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Camera Extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCamEndToEnd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8CEED2FA28AE519300DFDD3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = OffcutsCamEndToEnd/OffcutsCamEndToEnd.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OffcutsCamEndToEnd/Preview Content\"";
+				DEVELOPMENT_TEAM = Z39BRGKSRW;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "Camera Extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.politepix.OffcutsCamEndToEnd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8C3B7E4828A3E43200E7BAFB /* Build configuration list for PBXProject "OffcutsCam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C3B7E5A28A3E43300E7BAFB /* Debug */,
+				8C3B7E5B28A3E43300E7BAFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8C3B7E5C28A3E43300E7BAFB /* Build configuration list for PBXNativeTarget "OffcutsCam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C3B7E5D28A3E43300E7BAFB /* Debug */,
+				8C3B7E5E28A3E43300E7BAFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8C3B7E6E28A3E48200E7BAFB /* Build configuration list for PBXNativeTarget "Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C3B7E6F28A3E48200E7BAFB /* Debug */,
+				8C3B7E7028A3E48200E7BAFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8CEED2FB28AE519300DFDD3B /* Build configuration list for PBXNativeTarget "OffcutsCamEndToEnd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CEED2F928AE519300DFDD3B /* Debug */,
+				8CEED2FA28AE519300DFDD3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8C3B7E4528A3E43200E7BAFB /* Project object */;
+}
