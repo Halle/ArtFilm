@@ -40,7 +40,8 @@ extension ContentView: View {
                 logger.debug("Chosen effect: \(moods[tag].rawValue)")
                 NotificationManager.postNotification(named: moods[tag].rawValue)
             }
-        }.frame(alignment: .top)
+        }
+        .frame(alignment: .top)
         Spacer()
     }
 }

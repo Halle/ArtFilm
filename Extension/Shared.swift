@@ -4,8 +4,8 @@
 
 import AppKit
 import AVFoundation
-import Foundation
 import CoreMediaIO
+import Foundation
 
 // MARK: - CaptureSessionManager
 
@@ -70,7 +70,19 @@ class CaptureSessionManager: NSObject {
         }
 
         do {
+            let fallbackPreset = AVCaptureSession.Preset.high
             let input = try AVCaptureDeviceInput(device: camera)
+
+            let supportStandardPreset = input.device.supportsSessionPreset(sessionPreset)
+            if !supportStandardPreset {
+                let supportFallbackPreset = input.device.supportsSessionPreset(fallbackPreset)
+                if supportFallbackPreset {
+                    captureSession.sessionPreset = fallbackPreset
+                } else {
+                    logger.error("No HD formats used by this code supported, returning.")
+                    return false
+                }
+            }
             captureSession.addInput(input)
         } catch {
             logger.error("Can't create AVCaptureDeviceInput, returning")

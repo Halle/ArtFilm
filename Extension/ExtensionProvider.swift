@@ -6,9 +6,10 @@
 //
 
 import Accelerate
+import AppKit
 import AVFoundation
-import Cocoa
 import CoreMediaIO
+import Foundation
 import IOKit.audio
 import os.log
 
@@ -31,7 +32,6 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
     // MARK: Lifecycle
 
     init(localizedName: String) {
-        mood = MoodName.bypass
         super.init()
 
         guard let bundleID = Bundle.main.bundleIdentifier else { return }
@@ -92,7 +92,7 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
     var _isExtension: Bool = true
     var _streamSource: ExtensionStreamSource!
     var _videoDescription: CMFormatDescription!
-    var mood: MoodName
+    var mood = MoodName.bypass
 
     var availableProperties: Set<CMIOExtensionProperty> {
         [.deviceTransportType, .deviceModel, customEffectExtensionProperty]
@@ -158,6 +158,297 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
     }
 }
 
+// MARK: - ExtensionStreamSource
+
+class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideoDataOutputSampleBufferDelegate {
+    // MARK: Lifecycle
+
+    init(localizedName: String, streamID: UUID, streamFormat: CMIOExtensionStreamFormat, device: CMIOExtensionDevice) {
+        self.device = device
+        _streamFormat = streamFormat
+
+        super.init()
+
+        captureSessionManager = CaptureSessionManager(capturingOffcutsCam: false)
+        guard let captureSessionManager = captureSessionManager else {
+            logger.error("Not able to get capture session, returning.")
+            return
+        }
+
+        guard captureSessionManager.configured == true, let captureSessionManagerOutput = captureSessionManager.videoOutput else {
+            logger.error("Not able to configure session and change captureSessionManagerOutput delegate, returning")
+            return
+        }
+        captureSessionManagerOutput.setSampleBufferDelegate(self, queue: captureSessionManager.dataOutputQueue)
+        logger.debug("Sample buffer delegate is now \(captureSessionManagerOutput.sampleBufferDelegate.debugDescription)")
+        stream = CMIOExtensionStream(localizedName: localizedName, streamID: streamID, direction: .source, clockType: .hostTime, source: self)
+    }
+
+    // MARK: Internal
+
+    let effects = Effects()
+
+    private(set) var stream: CMIOExtensionStream!
+
+    var formats: [CMIOExtensionStreamFormat] {
+        [_streamFormat]
+    }
+
+    var availableProperties: Set<CMIOExtensionProperty> {
+        [.streamActiveFormatIndex, .streamFrameDuration]
+    }
+
+    func captureOutput(_: AVCaptureOutput,
+                       didOutput sampleBuffer: CMSampleBuffer,
+                       from _: AVCaptureConnection)
+    {
+        guard let deviceSource = device.source as? ExtensionDeviceSource else {
+            logger.error("Couldn't obtain device source")
+            return
+        }
+
+        guard let pixelBuffer = sampleBuffer.imageBuffer else {
+            return
+        }
+
+        CVPixelBufferLockBaseAddress(
+            pixelBuffer,
+            CVPixelBufferLockFlags.readOnly)
+
+        effects.populateDestinationBuffer(pixelBuffer: pixelBuffer)
+        if deviceSource.mood != .bypass {
+            effects.artFilm(forMood: deviceSource.mood)
+        }
+
+        CVPixelBufferUnlockBaseAddress(
+            pixelBuffer,
+            CVPixelBufferLockFlags.readOnly)
+
+        var err: OSStatus = 0
+        var sbuf: CMSampleBuffer!
+        var timingInfo = CMSampleTimingInfo()
+        timingInfo.presentationTimeStamp = CMClockGetTime(CMClockGetHostTimeClock())
+
+        let width = outputWidth
+        let height = outputHeight
+
+        let pixelBufferAttributes: NSDictionary = [
+            kCVPixelBufferWidthKey: width,
+            kCVPixelBufferHeightKey: height,
+            kCVPixelBufferPixelFormatTypeKey: deviceSource._videoDescription.mediaSubType,
+            kCVPixelBufferIOSurfacePropertiesKey: [:],
+        ]
+
+        var destinationCVPixelBuffer: CVPixelBuffer?
+        let result = CVPixelBufferCreate(kCFAllocatorDefault,
+                                         width,
+                                         height,
+                                         kCVPixelFormatType_422YpCbCr8,
+                                         pixelBufferAttributes as CFDictionary,
+                                         &destinationCVPixelBuffer)
+        if result == 0, let destinationCVPixelBuffer = destinationCVPixelBuffer {
+            CVPixelBufferLockBaseAddress(destinationCVPixelBuffer,
+                                         CVPixelBufferLockFlags(rawValue: 0))
+
+            do {
+                try effects.destinationBuffer.copy(to: destinationCVPixelBuffer, cvImageFormat: effects.cvImageFormat, cgImageFormat: effects.cgImageFormat)
+            } catch {
+                logger.debug("Copy failed.")
+            }
+
+            CVPixelBufferUnlockBaseAddress(destinationCVPixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+
+            var formatDescription: CMFormatDescription?
+            CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescriptionOut: &formatDescription)
+            err = CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &sbuf)
+
+            if err == 0 {
+                if deviceSource._isExtension { // If I'm the extension, send to output stream
+                    stream.send(sbuf, discontinuity: [], hostTimeInNanoseconds: UInt64(timingInfo.presentationTimeStamp.seconds * Double(NSEC_PER_SEC)))
+                } else {
+                    deviceSource.extensionDeviceSourceDelegate?.bufferReceived(sbuf) // If I'm the end to end testing app, send to delegate method.
+                }
+            } else {
+                logger.error("Error in stream: \(err)")
+            }
+        }
+    }
+
+    func streamProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
+        -> CMIOExtensionStreamProperties
+    {
+        let streamProperties = CMIOExtensionStreamProperties(dictionary: [:])
+        if properties.contains(.streamActiveFormatIndex) {
+            streamProperties.activeFormatIndex = 0
+        }
+        if properties.contains(.streamFrameDuration) {
+            let frameDuration = CMTime(value: 1, timescale: Int32(kFrameRate))
+            streamProperties.frameDuration = frameDuration
+        }
+
+        return streamProperties
+    }
+
+    func setStreamProperties(_ streamProperties: CMIOExtensionStreamProperties) throws {
+        if let activeFormatIndex = streamProperties.activeFormatIndex {
+            self.activeFormatIndex = activeFormatIndex
+        }
+    }
+
+    func authorizedToStartStream(for _: CMIOExtensionClient) -> Bool {
+        true
+    }
+
+    func startStream() throws {
+        guard let captureSessionManager = captureSessionManager, captureSessionManager.captureSession.isRunning == false else {
+            logger.error("Can't start capture session running, returning")
+            return
+        }
+        captureSessionManager.captureSession.startRunning()
+    }
+
+    func stopStream() throws {
+        guard let captureSessionManager = captureSessionManager, captureSessionManager.configured, captureSessionManager.captureSession.isRunning else {
+            logger.error("Can't stop AVCaptureSession where it is expected, returning")
+            return
+        }
+        if captureSessionManager.captureSession.isRunning {
+            captureSessionManager.captureSession.stopRunning()
+        }
+    }
+
+    // MARK: Private
+
+    private let device: CMIOExtensionDevice
+    private var captureSessionManager: CaptureSessionManager?
+    private let _streamFormat: CMIOExtensionStreamFormat
+    private let sessionPreset = AVCaptureSession.Preset.hd1280x720
+
+    private var activeFormatIndex: Int = 0 {
+        didSet {
+            if activeFormatIndex >= 1 {
+                os_log(.error, "Invalid index")
+            }
+        }
+    }
+}
+
+// MARK: - ExtensionProviderSource
+
+class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource, AVCaptureVideoDataOutputSampleBufferDelegate {
+    // MARK: Lifecycle
+
+    init(clientQueue: DispatchQueue?) {
+        super.init()
+        provider = CMIOExtensionProvider(source: self, clientQueue: clientQueue)
+        deviceSource = ExtensionDeviceSource(localizedName: "OffcutsCam")
+
+        do {
+            try provider.addDevice(deviceSource.device)
+        } catch {
+            fatalError("Failed to add device: \(error.localizedDescription)")
+        }
+        startNotificationListeners()
+    }
+
+    deinit {
+        stopNotificationListeners()
+    }
+
+    // MARK: Internal
+
+    private(set) var provider: CMIOExtensionProvider!
+
+    var deviceSource: ExtensionDeviceSource!
+
+    var availableProperties: Set<CMIOExtensionProperty> {
+        [.providerManufacturer]
+    }
+
+    func connect(to _: CMIOExtensionClient) throws {}
+
+    func disconnect(from _: CMIOExtensionClient) {}
+
+    func providerProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
+        -> CMIOExtensionProviderProperties
+    {
+        let providerProperties =
+            CMIOExtensionProviderProperties(dictionary: [:])
+        if properties.contains(.providerManufacturer) {
+            providerProperties.manufacturer = "OffcutsCam Manufacturer"
+        }
+        return providerProperties
+    }
+
+    func setProviderProperties(_: CMIOExtensionProviderProperties) throws {}
+
+    // MARK: Private
+
+    private let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
+    private var notificationListenerStarted = false
+}
+
+// For various reasons, including that it is arguably extension provision for the end-to-end test app,
+// it is preferable to keep notification listening in ExtensionProviderSource, but we can at least separate
+// it into an extension.
+
+extension ExtensionProviderSource {
+    private func notificationReceived(notificationName: String) {
+        if let name = NotificationName(rawValue: notificationName) {
+            switch name {
+            case .startStream:
+                do {
+                    try deviceSource._streamSource.startStream()
+                } catch {
+                    logger.debug("Couldn't start the stream")
+                }
+            case .stopStream:
+                do {
+                    try deviceSource._streamSource.stopStream()
+                } catch {
+                    logger.debug("Couldn't stop the stream")
+                }
+            }
+        } else {
+            if let mood = MoodName(rawValue: notificationName.replacingOccurrences(of: Identifiers.appGroup.rawValue + ".", with: "")) {
+                deviceSource.mood = mood
+            }
+        }
+    }
+
+    private func startNotificationListeners() {
+        var allNotifications = [String]()
+        for notificationName in NotificationName.allCases {
+            allNotifications.append(notificationName.rawValue)
+        }
+
+        for notificationName in MoodName.allCases {
+            allNotifications.append(Identifiers.appGroup.rawValue + "." + notificationName.rawValue)
+        }
+
+        for notificationName in allNotifications {
+            let observer = UnsafeRawPointer(Unmanaged.passUnretained(self).toOpaque())
+
+            CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), observer, { _, observer, name, _, _ in
+                if let observer = observer, let name = name {
+                    let extensionProviderSourceSelf = Unmanaged<ExtensionProviderSource>.fromOpaque(observer).takeUnretainedValue()
+                    extensionProviderSourceSelf.notificationReceived(notificationName: name.rawValue as String)
+                }
+            },
+            notificationName as CFString, nil, .deliverImmediately)
+        }
+    }
+
+    private func stopNotificationListeners() {
+        if notificationListenerStarted {
+            CFNotificationCenterRemoveEveryObserver(notificationCenter,
+                                                    Unmanaged.passRetained(self)
+                                                        .toOpaque())
+            notificationListenerStarted = false
+        }
+    }
+}
+
 // MARK: - Effects
 
 class Effects: NSObject {
@@ -205,7 +496,8 @@ class Effects: NSObject {
 
                 if var descriptor = BNNSNDArrayDescriptor(
                     data: noisePtr,
-                    shape: shape) {
+                    shape: shape)
+                {
                     let mean: Float = 0.0125
                     let stdDev: Float = 0.025
 
@@ -417,303 +709,6 @@ class Effects: NSObject {
         } catch {
             logger.error("Error creating source image buffer: \(error)")
             return nil
-        }
-    }
-}
-
-// MARK: - ExtensionStreamSource
-
-class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideoDataOutputSampleBufferDelegate {
-    // MARK: Lifecycle
-
-    init(localizedName: String, streamID: UUID, streamFormat: CMIOExtensionStreamFormat, device: CMIOExtensionDevice) {
-        self.device = device
-        _streamFormat = streamFormat
-
-        super.init()
-        effects = Effects()
-        captureSessionManager = CaptureSessionManager(capturingOffcutsCam: false)
-        guard let captureSessionManager = captureSessionManager else {
-            logger.error("Not able to get capture session, returning.")
-            return
-        }
-
-        guard captureSessionManager.configured == true, let captureSessionManagerOutput = captureSessionManager.videoOutput else {
-            logger.error("Not able to configure session and change captureSessionManagerOutput delegate, returning")
-            return
-        }
-        captureSessionManagerOutput.setSampleBufferDelegate(self, queue: captureSessionManager.dataOutputQueue)
-        logger.debug("Sample buffer delegate is now \(captureSessionManagerOutput.sampleBufferDelegate.debugDescription)")
-        stream = CMIOExtensionStream(localizedName: localizedName, streamID: streamID, direction: .source, clockType: .hostTime, source: self)
-    }
-
-    // MARK: Internal
-
-    var effects: Effects?
-
-    private(set) var stream: CMIOExtensionStream!
-
-    var formats: [CMIOExtensionStreamFormat] {
-        [_streamFormat]
-    }
-
-    var availableProperties: Set<CMIOExtensionProperty> {
-        [.streamActiveFormatIndex, .streamFrameDuration]
-    }
-
-    func captureOutput(_: AVCaptureOutput,
-                       didOutput sampleBuffer: CMSampleBuffer,
-                       from _: AVCaptureConnection)
-    {
-        guard let deviceSource = device.source as? ExtensionDeviceSource else {
-            logger.error("Couldn't obtain device source")
-            return
-        }
-
-        guard let pixelBuffer = sampleBuffer.imageBuffer else {
-            return
-        }
-
-        CVPixelBufferLockBaseAddress(
-            pixelBuffer,
-            CVPixelBufferLockFlags.readOnly)
-        guard let effects = effects else {
-            logger.debug("Effects weren't available, returning")
-            return
-        }
-        effects.populateDestinationBuffer(pixelBuffer: pixelBuffer)
-        if deviceSource.mood != .bypass {
-            effects.artFilm(forMood: deviceSource.mood)
-        }
-        stream(pixelBuffer: pixelBuffer, withDeviceSource: deviceSource)
-        CVPixelBufferUnlockBaseAddress(
-            pixelBuffer,
-            CVPixelBufferLockFlags.readOnly)
-    }
-
-    func streamProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
-        -> CMIOExtensionStreamProperties
-    {
-        let streamProperties = CMIOExtensionStreamProperties(dictionary: [:])
-        if properties.contains(.streamActiveFormatIndex) {
-            streamProperties.activeFormatIndex = 0
-        }
-        if properties.contains(.streamFrameDuration) {
-            let frameDuration = CMTime(value: 1, timescale: Int32(kFrameRate))
-            streamProperties.frameDuration = frameDuration
-        }
-
-        return streamProperties
-    }
-
-    func setStreamProperties(_ streamProperties: CMIOExtensionStreamProperties) throws {
-        if let activeFormatIndex = streamProperties.activeFormatIndex {
-            self.activeFormatIndex = activeFormatIndex
-        }
-    }
-
-    func authorizedToStartStream(for _: CMIOExtensionClient) -> Bool {
-        true
-    }
-
-    func startStream() throws {
-        guard let captureSessionManager = captureSessionManager, captureSessionManager.captureSession.isRunning == false else {
-            logger.error("Can't start capture session running, returning")
-            return
-        }
-        captureSessionManager.captureSession.startRunning()
-    }
-
-    func stopStream() throws {
-        guard let captureSessionManager = captureSessionManager, captureSessionManager.configured, captureSessionManager.captureSession.isRunning else {
-            logger.error("Can't stop AVCaptureSession where it is expected, returning")
-            return
-        }
-        if captureSessionManager.captureSession.isRunning {
-            captureSessionManager.captureSession.stopRunning()
-        }
-    }
-
-    // MARK: Private
-
-    private let device: CMIOExtensionDevice
-    private var captureSessionManager: CaptureSessionManager?
-    private let _streamFormat: CMIOExtensionStreamFormat
-    private let sessionPreset = AVCaptureSession.Preset.hd1280x720
-
-    private var activeFormatIndex: Int = 0 {
-        didSet {
-            if activeFormatIndex >= 1 {
-                os_log(.error, "Invalid index")
-            }
-        }
-    }
-
-    private func stream(pixelBuffer _: CVPixelBuffer, withDeviceSource deviceSource: ExtensionDeviceSource) {
-        var err: OSStatus = 0
-        var sbuf: CMSampleBuffer!
-        var timingInfo = CMSampleTimingInfo()
-        timingInfo.presentationTimeStamp = CMClockGetTime(CMClockGetHostTimeClock())
-
-        let width = outputWidth
-        let height = outputHeight
-
-        let pixelBufferAttributes: NSDictionary = [
-            kCVPixelBufferWidthKey: width,
-            kCVPixelBufferHeightKey: height,
-            kCVPixelBufferPixelFormatTypeKey: deviceSource._videoDescription.mediaSubType,
-            kCVPixelBufferIOSurfacePropertiesKey: [:],
-        ]
-
-        var destinationCVPixelBuffer: CVPixelBuffer?
-        let result = CVPixelBufferCreate(kCFAllocatorDefault,
-                                         width,
-                                         height,
-                                         kCVPixelFormatType_422YpCbCr8,
-                                         pixelBufferAttributes as CFDictionary,
-                                         &destinationCVPixelBuffer)
-        if result == 0, let destinationCVPixelBuffer = destinationCVPixelBuffer {
-            CVPixelBufferLockBaseAddress(destinationCVPixelBuffer,
-                                         CVPixelBufferLockFlags(rawValue: 0))
-
-            do {
-                guard let effects = effects else { return }
-                try effects.destinationBuffer.copy(to: destinationCVPixelBuffer, cvImageFormat: effects.cvImageFormat, cgImageFormat: effects.cgImageFormat)
-            } catch {
-                logger.debug("Copy failed.")
-            }
-
-            CVPixelBufferUnlockBaseAddress(destinationCVPixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-
-            var formatDescription: CMFormatDescription?
-            CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescriptionOut: &formatDescription)
-            err = CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &sbuf)
-
-            if err == 0 {
-                if deviceSource._isExtension { // If I'm the extension, send to output stream
-                    stream.send(sbuf, discontinuity: [], hostTimeInNanoseconds: UInt64(timingInfo.presentationTimeStamp.seconds * Double(NSEC_PER_SEC)))
-                } else {
-                    deviceSource.extensionDeviceSourceDelegate?.bufferReceived(sbuf) // If I'm the end to end testing app, send to delegate method.
-                }
-            } else {
-                logger.error("Error in stream: \(err)")
-            }
-        }
-    }
-}
-
-// MARK: - ExtensionProviderSource
-
-class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource, AVCaptureVideoDataOutputSampleBufferDelegate {
-    // MARK: Lifecycle
-
-    init(clientQueue: DispatchQueue?) {
-        super.init()
-        provider = CMIOExtensionProvider(source: self, clientQueue: clientQueue)
-        deviceSource = ExtensionDeviceSource(localizedName: "OffcutsCam")
-
-        do {
-            try provider.addDevice(deviceSource.device)
-        } catch {
-            fatalError("Failed to add device: \(error.localizedDescription)")
-        }
-        startNotificationListeners()
-    }
-
-    deinit {
-        stopNotificationListeners()
-    }
-
-    // MARK: Internal
-
-    private(set) var provider: CMIOExtensionProvider!
-
-    var deviceSource: ExtensionDeviceSource!
-
-    var availableProperties: Set<CMIOExtensionProperty> {
-        [.providerManufacturer]
-    }
-
-    func connect(to _: CMIOExtensionClient) throws {}
-
-    func disconnect(from _: CMIOExtensionClient) {}
-
-    func providerProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
-        -> CMIOExtensionProviderProperties
-    {
-        let providerProperties =
-            CMIOExtensionProviderProperties(dictionary: [:])
-        if properties.contains(.providerManufacturer) {
-            providerProperties.manufacturer = "OffcutsCam Manufacturer"
-        }
-        return providerProperties
-    }
-
-    func setProviderProperties(_: CMIOExtensionProviderProperties) throws {}
-
-    // MARK: Private
-
-    private let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
-    private var notificationListenerStarted = false
-}
-
-// For various reasons, including that it is arguably extension provision for the end-to-end test app,
-// it is preferable to keep notification listening in ExtensionProviderSource, but we can at least separate
-// it into an extension.
-
-extension ExtensionProviderSource {
-    private func notificationReceived(notificationName: String) {
-        if let name = NotificationName(rawValue: notificationName) {
-            switch name {
-            case .startStream:
-                do {
-                    try deviceSource._streamSource.startStream()
-                } catch {
-                    logger.debug("Couldn't start the stream")
-                }
-            case .stopStream:
-                do {
-                    try deviceSource._streamSource.stopStream()
-                } catch {
-                    logger.debug("Couldn't stop the stream")
-                }
-            }
-        } else {
-            if let mood = MoodName(rawValue: notificationName.replacingOccurrences(of: Identifiers.appGroup.rawValue + ".", with: "")) {
-                deviceSource.mood = mood
-            }
-        }
-    }
-
-    private func startNotificationListeners() {
-        var allNotifications = [String]()
-        for notificationName in NotificationName.allCases {
-            allNotifications.append(notificationName.rawValue)
-        }
-
-        for notificationName in MoodName.allCases {
-            allNotifications.append(Identifiers.appGroup.rawValue + "." + notificationName.rawValue)
-        }
-
-        for notificationName in allNotifications {
-            let observer = UnsafeRawPointer(Unmanaged.passUnretained(self).toOpaque())
-
-            CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), observer, { _, observer, name, _, _ in
-                if let observer = observer, let name = name {
-                    let extensionProviderSourceSelf = Unmanaged<ExtensionProviderSource>.fromOpaque(observer).takeUnretainedValue()
-                    extensionProviderSourceSelf.notificationReceived(notificationName: name.rawValue as String)
-                }
-            },
-            notificationName as CFString, nil, .deliverImmediately)
-        }
-    }
-
-    private func stopNotificationListeners() {
-        if notificationListenerStarted {
-            CFNotificationCenterRemoveEveryObserver(notificationCenter,
-                                                    Unmanaged.passRetained(self)
-                                                        .toOpaque())
-            notificationListenerStarted = false
         }
     }
 }
