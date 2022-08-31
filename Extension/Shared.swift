@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - CaptureSessionManager
 
-class CaptureSessionManager: NSObject {
+class CaptureSessionManager: NSObject { // Flexible standard capture setup for Continuity and for extension
     // MARK: Lifecycle
 
     init(capturingOffcutsCam: Bool) {

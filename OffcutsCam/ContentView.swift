@@ -99,7 +99,7 @@ struct ContentView_Previews: PreviewProvider {
 
 // MARK: - CustomPropertyManager
 
-class CustomPropertyManager: NSObject {
+class CustomPropertyManager: NSObject { // Direct communication with the extension via its published properties
     // MARK: Lifecycle
 
     override init() {
@@ -199,7 +199,7 @@ class CustomPropertyManager: NSObject {
 
 // MARK: - SystemExtensionRequestManager
 
-class SystemExtensionRequestManager: NSObject, ObservableObject {
+class SystemExtensionRequestManager: NSObject, ObservableObject { // Manage install/uninstall of extension
     // MARK: Lifecycle
 
     init(logText: String) {
@@ -337,7 +337,7 @@ extension SystemExtensionRequestManager: OSSystemExtensionRequestDelegate {
 
 // MARK: - OutputImageManager
 
-class OutputImageManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject {
+class OutputImageManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, ObservableObject { // Manage receipt of video buffers and conversion into observable CGImage for SwiftUI
     @Published var videoExtensionStreamOutputImage: CGImage?
     let noVideoImage: CGImage = NSImage(
         systemSymbolName: "video.slash",
@@ -352,7 +352,7 @@ class OutputImageManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             }
 
             guard let ioSurface = CVPixelBufferGetIOSurface(cvImageBuffer) else {
-                logger.debug("Pixel buffer had no IOSurface") // The camera uses IOSurface so we want image to break if there is none.
+                logger.debug("Pixel buffer had no IOSurface") // This is improbable in an installed extension.
                 return
             }
 

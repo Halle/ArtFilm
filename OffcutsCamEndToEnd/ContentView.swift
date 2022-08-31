@@ -58,7 +58,7 @@ struct ContentView_Previews: PreviewProvider {
 
 class EndToEndStreamProvider: NSObject, ObservableObject,
     ExtensionDeviceSourceDelegate
-{
+{ // Fake-start the "extension", i.e., the extension code end-to-end but outside the system machinery. Any time this gets complex, it is probably not doing the job and should get a rethink.
     // MARK: Lifecycle
 
     override init() {
@@ -76,6 +76,8 @@ class EndToEndStreamProvider: NSObject, ObservableObject,
 
     // MARK: Internal
 
+    // Showing the output video from ExtensionProvider, also should be as simple as possible.
+    
     @Published var videoExtensionStreamOutputImage: CGImage?
     let noVideoImage: CGImage = NSImage(
         systemSymbolName: "video.slash",
