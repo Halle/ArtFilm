@@ -57,9 +57,10 @@ struct ContentView_Previews: PreviewProvider {
 // MARK: - EndToEndStreamProvider
 
 class EndToEndStreamProvider: NSObject, ObservableObject,
-    ExtensionDeviceSourceDelegate
-{ // Fake-start the "extension", i.e., the extension code end-to-end but outside the system machinery. Any time this gets complex, it is probably not doing the job and should get a rethink.
+    ExtensionDeviceSourceDelegate {
     // MARK: Lifecycle
+
+    // Fake-start the "extension", i.e., the extension code end-to-end but outside the system machinery. Any time this gets complex, it is probably not doing the job and should get a rethink.
 
     override init() {
         providerSource = ExtensionProviderSource(clientQueue: nil)
@@ -77,7 +78,7 @@ class EndToEndStreamProvider: NSObject, ObservableObject,
     // MARK: Internal
 
     // Showing the output video from ExtensionProvider, also should be as simple as possible.
-    
+
     @Published var videoExtensionStreamOutputImage: CGImage?
     let noVideoImage: CGImage = NSImage(
         systemSymbolName: "video.slash",
@@ -94,7 +95,8 @@ class EndToEndStreamProvider: NSObject, ObservableObject,
             }
 
             guard let ioSurface = CVPixelBufferGetIOSurface(cvImageBuffer) else {
-                logger.debug("Pixel buffer had no IOSurface") // The camera uses IOSurface so we want image to break if there is none.
+                logger
+                    .debug("Pixel buffer had no IOSurface") // The camera uses IOSurface so we want image to break if there is none.
                 return
             }
 

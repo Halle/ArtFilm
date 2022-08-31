@@ -59,8 +59,11 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
             kCVPixelBufferPixelFormatTypeKey: _videoDescription.mediaSubType,
             kCVPixelBufferIOSurfacePropertiesKey: [:],
         ]
-        CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, pixelBufferAttributes, // Set up the pixel buffer pool for the stream before starting it
-                                &_bufferPool)
+        CVPixelBufferPoolCreate(
+            kCFAllocatorDefault,
+            nil,
+            pixelBufferAttributes, // Set up the pixel buffer pool for the stream before starting it
+            &_bufferPool)
 
         let videoStreamFormat =
             CMIOExtensionStreamFormat(formatDescription: _videoDescription,
@@ -101,8 +104,7 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
     }
 
     func deviceProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
-        -> CMIOExtensionDeviceProperties
-    {
+        -> CMIOExtensionDeviceProperties {
         let deviceProperties = CMIOExtensionDeviceProperties(dictionary: [:])
         if properties.contains(.deviceTransportType) {
             deviceProperties.transportType = kIOAudioDeviceTransportTypeVirtual
@@ -116,7 +118,8 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
         // If I get there and there is a key for my effect, that means that we've run before.
         // We are backing the custom property with the extension's UserDefaults.
         let userDefaultsPropertyKey = PropertyName.mood.rawValue
-        if userDefaults?.object(forKey: userDefaultsPropertyKey) != nil, let propertyMood = userDefaults?.string(forKey: userDefaultsPropertyKey) { // Not first run
+        if userDefaults?.object(forKey: userDefaultsPropertyKey) != nil,
+           let propertyMood = userDefaults?.string(forKey: userDefaultsPropertyKey) { // Not first run
             deviceProperties.setPropertyState(CMIOExtensionPropertyState(value: propertyMood as NSString),
                                               forProperty: customEffectExtensionProperty)
 
@@ -137,7 +140,9 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
     func setDeviceProperties(_ deviceProperties: CMIOExtensionDeviceProperties) throws {
         let userDefaultsPropertyKey = PropertyName.mood.rawValue
         if let customEffectValueFromPropertiesDictionary = dictionaryValueForEffectProperty(in: deviceProperties) {
-            logger.debug("New setting in device properties for custom effect property: \(customEffectValueFromPropertiesDictionary)")
+            logger
+                .debug(
+                    "New setting in device properties for custom effect property: \(customEffectValueFromPropertiesDictionary)")
             userDefaults?.set(customEffectValueFromPropertiesDictionary, forKey: userDefaultsPropertyKey)
             if let moodName = MoodName(rawValue: customEffectValueFromPropertiesDictionary) {
                 mood = moodName
@@ -147,15 +152,19 @@ class ExtensionDeviceSource: NSObject, CMIOExtensionDeviceSource {
 
     // MARK: Private
 
-    private let customEffectExtensionProperty: CMIOExtensionProperty = .init(rawValue: "4cc_" + PropertyName.mood.rawValue + "_glob_0000") // Custom 'mood' property
+    private let customEffectExtensionProperty: CMIOExtensionProperty = .init(rawValue: "4cc_" + PropertyName.mood
+        .rawValue + "_glob_0000") // Custom 'mood' property
 
     private let userDefaults = UserDefaults(suiteName: Identifiers.appGroup.rawValue)
     private var _bufferPool: CVPixelBufferPool!
     private var _bufferAuxAttributes: NSDictionary!
 
     private func dictionaryValueForEffectProperty(in deviceProperties: CMIOExtensionDeviceProperties) -> String? {
-        guard let customEffectValueFromPropertiesDictionary = deviceProperties.propertiesDictionary[customEffectExtensionProperty]?.value as? String else {
-            logger.debug("Was not able to get the value of the custom effect property from the properties dictionary of the device, returning.")
+        guard let customEffectValueFromPropertiesDictionary = deviceProperties
+            .propertiesDictionary[customEffectExtensionProperty]?.value as? String else {
+            logger
+                .debug(
+                    "Was not able to get the value of the custom effect property from the properties dictionary of the device, returning.")
             return nil
         }
         return customEffectValueFromPropertiesDictionary
@@ -201,19 +210,27 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
             return
         }
 
-        captureSessionManager = CaptureSessionManager(capturingOffcutsCam: false) // We are going to use captured video for the stream
+        captureSessionManager =
+            CaptureSessionManager(capturingOffcutsCam: false) // We are going to use captured video for the stream
         guard let captureSessionManager = captureSessionManager else {
             logger.error("Not able to get capture session, returning.")
             return
         }
 
-        guard captureSessionManager.configured == true, let captureSessionManagerOutput = captureSessionManager.videoOutput else {
+        guard captureSessionManager.configured == true,
+              let captureSessionManagerOutput = captureSessionManager.videoOutput else {
             logger.error("Not able to configure session and change captureSessionManagerOutput delegate, returning")
             return
         }
         captureSessionManagerOutput.setSampleBufferDelegate(self, queue: captureSessionManager.dataOutputQueue)
-        logger.debug("Sample buffer delegate is now \(captureSessionManagerOutput.sampleBufferDelegate.debugDescription)")
-        stream = CMIOExtensionStream(localizedName: localizedName, streamID: streamID, direction: .source, clockType: .hostTime, source: self)
+        logger
+            .debug("Sample buffer delegate is now \(captureSessionManagerOutput.sampleBufferDelegate.debugDescription)")
+        stream = CMIOExtensionStream(
+            localizedName: localizedName,
+            streamID: streamID,
+            direction: .source,
+            clockType: .hostTime,
+            source: self)
     }
 
     // MARK: Internal
@@ -233,11 +250,12 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
         [.streamActiveFormatIndex, .streamFrameDuration]
     }
 
-    func captureOutput(_: AVCaptureOutput, // Callback for sampleBuffers of captured video, which we apply our effects to in realtime
+    func captureOutput(_: AVCaptureOutput,
+                       // Callback for sampleBuffers of captured video, which we apply our effects to in realtime
                        didOutput sampleBuffer: CMSampleBuffer,
-                       from _: AVCaptureConnection)
-    {
-        guard let pixelBuffer = sampleBuffer.imageBuffer, let deviceSource = deviceSource, let destinationCVPixelBuffer = destinationCVPixelBuffer else {
+                       from _: AVCaptureConnection) {
+        guard let pixelBuffer = sampleBuffer.imageBuffer, let deviceSource = deviceSource,
+              let destinationCVPixelBuffer = destinationCVPixelBuffer else {
             logger.debug("Nothing to do in sampleBuffer callback, returning.")
             return
         }
@@ -264,7 +282,10 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
                                      CVPixelBufferLockFlags(rawValue: 0))
 
         do {
-            try effects.destinationBuffer.copy(to: destinationCVPixelBuffer, cvImageFormat: effects.cvImageFormat, cgImageFormat: effects.cgImageFormat) // destinationBuffer back to CVPixelBuffer
+            try effects.destinationBuffer.copy(
+                to: destinationCVPixelBuffer,
+                cvImageFormat: effects.cvImageFormat,
+                cgImageFormat: effects.cgImageFormat) // destinationBuffer back to CVPixelBuffer
         } catch {
             logger.error("Copying to the destinationBuffer failed.")
         }
@@ -272,14 +293,26 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
         CVPixelBufferUnlockBaseAddress(destinationCVPixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 
         var formatDescription: CMFormatDescription?
-        CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescriptionOut: &formatDescription)
-        err = CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: destinationCVPixelBuffer, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &sbuf) // CVPixelBuffer into CMSampleBuffer for streaming out
+        CMVideoFormatDescriptionCreateForImageBuffer(
+            allocator: kCFAllocatorDefault,
+            imageBuffer: destinationCVPixelBuffer,
+            formatDescriptionOut: &formatDescription)
+        err = CMSampleBufferCreateReadyWithImageBuffer(
+            allocator: kCFAllocatorDefault,
+            imageBuffer: destinationCVPixelBuffer,
+            formatDescription: formatDescription!,
+            sampleTiming: &timingInfo,
+            sampleBufferOut: &sbuf) // CVPixelBuffer into CMSampleBuffer for streaming out
 
         if err == 0 {
             if deviceSource._isExtension { // If I'm the extension, send to output stream
-                stream.send(sbuf, discontinuity: [], hostTimeInNanoseconds: UInt64(timingInfo.presentationTimeStamp.seconds * Double(NSEC_PER_SEC)))
+                stream.send(
+                    sbuf,
+                    discontinuity: [],
+                    hostTimeInNanoseconds: UInt64(timingInfo.presentationTimeStamp.seconds * Double(NSEC_PER_SEC)))
             } else {
-                deviceSource.extensionDeviceSourceDelegate?.bufferReceived(sbuf) // If I'm the end to end testing app, send to delegate method.
+                deviceSource.extensionDeviceSourceDelegate?
+                    .bufferReceived(sbuf) // If I'm the end to end testing app, send to delegate method.
             }
         } else {
             logger.error("Error in stream: \(err)")
@@ -287,8 +320,7 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
     }
 
     func streamProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
-        -> CMIOExtensionStreamProperties
-    {
+        -> CMIOExtensionStreamProperties {
         let streamProperties = CMIOExtensionStreamProperties(dictionary: [:])
         if properties.contains(.streamActiveFormatIndex) {
             streamProperties.activeFormatIndex = 0
@@ -312,7 +344,8 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
     }
 
     func startStream() throws {
-        guard let captureSessionManager = captureSessionManager, captureSessionManager.captureSession.isRunning == false else {
+        guard let captureSessionManager = captureSessionManager,
+              captureSessionManager.captureSession.isRunning == false else {
             logger.error("Can't start capture session running, returning")
             return
         }
@@ -320,7 +353,8 @@ class ExtensionStreamSource: NSObject, CMIOExtensionStreamSource, AVCaptureVideo
     }
 
     func stopStream() throws {
-        guard let captureSessionManager = captureSessionManager, captureSessionManager.configured, captureSessionManager.captureSession.isRunning else {
+        guard let captureSessionManager = captureSessionManager, captureSessionManager.configured,
+              captureSessionManager.captureSession.isRunning else {
             logger.error("Can't stop AVCaptureSession where it is expected, returning")
             return
         }
@@ -384,8 +418,7 @@ class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource, AVCaptureV
     func disconnect(from _: CMIOExtensionClient) {}
 
     func providerProperties(forProperties properties: Set<CMIOExtensionProperty>) throws
-        -> CMIOExtensionProviderProperties
-    {
+        -> CMIOExtensionProviderProperties {
         let providerProperties =
             CMIOExtensionProviderProperties(dictionary: [:])
         if properties.contains(.providerManufacturer) {
@@ -406,7 +439,8 @@ class ExtensionProviderSource: NSObject, CMIOExtensionProviderSource, AVCaptureV
 // it is preferable to keep notification listening in ExtensionProviderSource, but we can at least separate
 // it into an extension.
 
-extension ExtensionProviderSource { // Hooks for end-to-end testing to substitute for inability to connect to published service properties
+extension ExtensionProviderSource {
+    // Hooks for end-to-end testing to substitute for inability to connect to published service properties
     private func notificationReceived(notificationName: String) {
         if let name = NotificationName(rawValue: notificationName) {
             switch name {
@@ -424,7 +458,8 @@ extension ExtensionProviderSource { // Hooks for end-to-end testing to substitut
                 }
             }
         } else {
-            if let mood = MoodName(rawValue: notificationName.replacingOccurrences(of: Identifiers.appGroup.rawValue + ".", with: "")) {
+            if let mood = MoodName(rawValue: notificationName
+                .replacingOccurrences(of: Identifiers.appGroup.rawValue + ".", with: "")) {
                 deviceSource.mood = mood
             }
         }
@@ -443,13 +478,19 @@ extension ExtensionProviderSource { // Hooks for end-to-end testing to substitut
         for notificationName in allNotifications {
             let observer = UnsafeRawPointer(Unmanaged.passUnretained(self).toOpaque())
 
-            CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), observer, { _, observer, name, _, _ in
-                if let observer = observer, let name = name {
-                    let extensionProviderSourceSelf = Unmanaged<ExtensionProviderSource>.fromOpaque(observer).takeUnretainedValue()
-                    extensionProviderSourceSelf.notificationReceived(notificationName: name.rawValue as String)
-                }
-            },
-            notificationName as CFString, nil, .deliverImmediately)
+            CFNotificationCenterAddObserver(
+                CFNotificationCenterGetDarwinNotifyCenter(),
+                observer,
+                { _, observer, name, _, _ in
+                    if let observer = observer, let name = name {
+                        let extensionProviderSourceSelf = Unmanaged<ExtensionProviderSource>.fromOpaque(observer)
+                            .takeUnretainedValue()
+                        extensionProviderSourceSelf.notificationReceived(notificationName: name.rawValue as String)
+                    }
+                },
+                notificationName as CFString,
+                nil,
+                .deliverImmediately)
         }
     }
 
@@ -512,8 +553,7 @@ class Effects: NSObject {
 
                 if var descriptor = BNNSNDArrayDescriptor(
                     data: noisePtr,
-                    shape: shape)
-                {
+                    shape: shape) {
                     let mean: Float = 0.0125
                     let stdDev: Float = 0.025
 
@@ -599,7 +639,8 @@ class Effects: NSObject {
     private var sourceImageHistogramBeyondTheBeyond: vImage.PixelBuffer.HistogramFFF?
     private var sourceImageHistogramDrama: vImage.PixelBuffer.HistogramFFF?
 
-    private let maximumNoiseArrays = kFrameRate / 2 // How many noise arrays we'll use for faking continuous random noise
+    private let maximumNoiseArrays = kFrameRate /
+        2 // How many noise arrays we'll use for faking continuous random noise
     private var noiseArrayCount = 0
     private var noiseArrayCountAscending = true
     private let histogramBinCount = 32
@@ -682,7 +723,9 @@ class Effects: NSObject {
             size: pixelBufferSize,
             pixelFormat: vImage.PlanarFx3.self)
 
-        var proposedRect = NSRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: image.size.width, height: image.size.height))
+        var proposedRect = NSRect(
+            origin: CGPoint(x: 0.0, y: 0.0),
+            size: CGSize(width: image.size.width, height: image.size.height))
 
         guard let cgImage = image.cgImage(forProposedRect: &proposedRect, context: nil, hints: nil) else {
             logger.error("Couldn't get cgImage from \(image), returning.")
@@ -692,7 +735,14 @@ class Effects: NSObject {
         let bytesPerPixel = cgImage.bitsPerPixel / cgImage.bitsPerComponent
         let destBytesPerRow = outputWidth * bytesPerPixel
 
-        guard let colorSpace = cgImage.colorSpace, let context = CGContext(data: nil, width: outputWidth, height: outputHeight, bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: destBytesPerRow, space: colorSpace, bitmapInfo: cgImage.alphaInfo.rawValue) else {
+        guard let colorSpace = cgImage.colorSpace, let context = CGContext(
+            data: nil,
+            width: outputWidth,
+            height: outputHeight,
+            bitsPerComponent: cgImage.bitsPerComponent,
+            bytesPerRow: destBytesPerRow,
+            space: colorSpace,
+            bitmapInfo: cgImage.alphaInfo.rawValue) else {
             logger.error("Problem setting up cgImage resize, returning.")
             return nil
         }
